@@ -8,6 +8,8 @@ import { useEffect } from "react";
 
 import { useColorScheme } from "@/components/useColorScheme";
 import { myCustomTheme } from "@/components/UIKittenTheme";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { AppProvider } from "@/components/context";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -51,12 +53,16 @@ function RootLayoutNav() {
 
   return (
     // <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-    <ApplicationProvider {...eva} theme={myCustomTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-      </Stack>
-    </ApplicationProvider>
+    <AppProvider>
+      <SafeAreaProvider>
+        <ApplicationProvider {...eva} theme={myCustomTheme}>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+          </Stack>
+        </ApplicationProvider>
+      </SafeAreaProvider>
+    </AppProvider>
 
     // </ThemeProvider>
   );

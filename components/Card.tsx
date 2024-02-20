@@ -1,33 +1,23 @@
 import React from "react";
-import { FlatList, StyleSheet, Text, View, Image, Platform } from "react-native";
+import { FlatList, StyleSheet, Text, View, Image, Platform, TouchableOpacity } from "react-native";
 import { Wish } from "./wishlists/types";
 import { Octicons } from "@expo/vector-icons";
+import { Link, router } from "expo-router";
+import { useAppContext } from "./context";
 
-function getImage(url: string) {
+function getImage(url: string, style: any) {
   if (url === "sweater") {
     return (
-      <Image
-        source={require("@/assets/images/sweater.jpg")}
-        resizeMode="contain"
-        style={[styles.imageIconCommon, styles.image]}
-      />
+      <Image source={require("@/assets/images/sweater.jpg")} resizeMode="contain" style={style} />
     );
   } else if (url === "speaker") {
     return (
-      <Image
-        source={require("@/assets/images/speaker.jpeg")}
-        resizeMode="contain"
-        style={[styles.imageIconCommon, styles.image]}
-      />
+      <Image source={require("@/assets/images/speaker.jpeg")} resizeMode="contain" style={style} />
     );
   }
   if (url === "kinder") {
     return (
-      <Image
-        source={require("@/assets/images/kinder.jpg")}
-        resizeMode="contain"
-        style={[styles.imageIconCommon, styles.image]}
-      />
+      <Image source={require("@/assets/images/kinder.jpg")} resizeMode="contain" style={style} />
     );
   }
 }
@@ -35,6 +25,13 @@ function getImage(url: string) {
 type Props = { title: string; description: string; backgroundColor: string; wishes: Wish[] };
 
 export default function Card({ title, description, backgroundColor, wishes }: Props) {
+  const { updateImage } = useAppContext();
+
+  function handleSelectImage(image: string) {
+    // router.replace("/modal");
+    updateImage(image);
+  }
+
   return (
     <View style={[styles.container, { backgroundColor }]}>
       <Text style={styles.cardTitle}>{title}</Text>
@@ -45,7 +42,9 @@ export default function Card({ title, description, backgroundColor, wishes }: Pr
         horizontal
         renderItem={({ item }) =>
           item.isEmpty === false ? (
-            <View>{getImage(item.image)}</View>
+            <TouchableOpacity onPress={() => handleSelectImage(item.image)}>
+              {getImage(item.image, [styles.imageIconCommon, styles.image])}
+            </TouchableOpacity>
           ) : (
             <View style={[styles.imageIconCommon, styles.iconContainer]}>
               <Octicons name="gift" size={24} color="silver" style={styles.icon} />
@@ -93,12 +92,8 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     marginTop: 15,
-    // flexDirection: "row",
     gap: 10,
-    // justifyContent: "space-between",
-    // alignItems: "center",
     width: "100%",
-    // aspectRatio: 1,
   },
   imageIconCommon: {
     height: 75,
