@@ -1,26 +1,10 @@
-import React from "react";
-import { FlatList, StyleSheet, Text, View, Image, Platform, TouchableOpacity } from "react-native";
-import { Wish } from "./wishlists/types";
 import { Octicons } from "@expo/vector-icons";
-import { Link, router } from "expo-router";
+import { Link } from "expo-router";
+import React from "react";
+import { FlatList, Image, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useAppContext } from "./context";
-
-function getImage(url: string, style: any) {
-  if (url === "sweater") {
-    return (
-      <Image source={require("@/assets/images/sweater.jpg")} resizeMode="contain" style={style} />
-    );
-  } else if (url === "speaker") {
-    return (
-      <Image source={require("@/assets/images/speaker.jpeg")} resizeMode="contain" style={style} />
-    );
-  }
-  if (url === "kinder") {
-    return (
-      <Image source={require("@/assets/images/kinder.jpg")} resizeMode="contain" style={style} />
-    );
-  }
-}
+import { Wish } from "./wishlists/types";
+import { getImage } from "./getImage";
 
 type Props = { title: string; description: string; backgroundColor: string; wishes: Wish[] };
 
@@ -42,9 +26,11 @@ export default function Card({ title, description, backgroundColor, wishes }: Pr
         horizontal
         renderItem={({ item }) =>
           item.isEmpty === false ? (
-            <TouchableOpacity onPress={() => handleSelectImage(item.image)}>
-              {getImage(item.image, [styles.imageIconCommon, styles.image])}
-            </TouchableOpacity>
+            <Link href="/modal" asChild>
+              <TouchableOpacity onPress={() => handleSelectImage(item.image)}>
+                {getImage(item.image, [styles.imageIconCommon, styles.image])}
+              </TouchableOpacity>
+            </Link>
           ) : (
             <View style={[styles.imageIconCommon, styles.iconContainer]}>
               <Octicons name="gift" size={24} color="silver" style={styles.icon} />
